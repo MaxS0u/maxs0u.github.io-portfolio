@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Maxime</title>
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080810;
+      --surface:   #0f0f1a;
+      --border:    #1e1e30;
+      --accent:    #7c6af7;
+      --accent2:   #a78bfa;
+      --text:      #e2e2f0;
+      --muted:     #6b6b8a;
+      --card:      #0d0d1c;
+      --radius:    12px;
+      --nav-h:     64px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── Animated Background ─── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      background: rgba(8, 8, 16, 0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ─── Sections ─── */
+    main { position: relative; z-index: 1; }
+
+    section {
+      min-height: 100vh;
+      padding: calc(var(--nav-h) + 4rem) clamp(1.5rem, 8vw, 10rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ─── Hero ─── */
+    #hero {
+      min-height: 100vh;
+      gap: 1.5rem;
+    }
+
+    .hero-tag {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      max-width: 14ch;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 50ch;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124, 106, 247, 0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    /* ─── Section Header ─── */
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 3rem;
+    }
+
+    /* ─── About ─── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text p + p { margin-top: 1rem; color: var(--muted); }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover { border-color: var(--accent); }
+
+    .stat-card .num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent2);
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ─── Skills ─── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .skill-category {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .skill-category:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .skill-category h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      background: rgba(124, 106, 247, 0.12);
+      color: var(--text);
+      border: 1px solid rgba(124, 106, 247, 0.25);
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.82rem;
+    }
+
+    /* ─── Projects ─── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .project-card .project-icon {
+      font-size: 1.75rem;
+    }
+
+    .project-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .project-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .project-link {
+      font-size: 0.8rem;
+      color: var(--accent2);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      transition: border-color 0.2s;
+    }
+
+    .project-link:hover { border-color: var(--accent); }
+
+    /* ─── Contact ─── */
+    .contact-inner {
+      max-width: 600px;
+    }
+
+    .contact-inner p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated Background Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Navigation -->
+<nav>
+  <a href="#hero" class="nav-logo">MS.</a>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#skills">Compétences</a></li>
+    <li><a href="#projects">Projets</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ─── Hero ─── -->
+  <section id="hero">
+    <p class="hero-tag">Disponible pour de nouvelles opportunités</p>
+    <h1 class="hero-title">Bonjour, je suis <span>Maxime</span></h1>
+    <p class="hero-sub">
+      Développeur passionné par la création d'expériences web modernes, performantes et soignées.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+      <a href="#contact" class="btn btn-outline">Me contacter</a>
+    </div>
+  </section>
+
+  <!-- ─── About ─── -->
+  <section id="about">
+    <p class="section-label">À propos</p>
+    <h2 class="section-title">Qui suis-je ?</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          Je suis un développeur web avec une forte sensibilité pour le design et l'expérience utilisateur.
+          J'aime construire des interfaces claires, rapides et accessibles.
+        </p>
+        <p>
+          En dehors du code, je m'intéresse à l'open source, aux nouvelles technologies et aux défis techniques
+          qui poussent à apprendre chaque jour.
+        </p>
+        <p>
+          Je recherche des projets ambitieux où je peux apporter une vraie valeur, que ce soit en solo ou au sein d'une équipe.
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="num">3+</div>
+          <div class="label">Années d'expérience</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">10+</div>
+          <div class="label">Projets réalisés</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">5+</div>
+          <div class="label">Technologies maîtrisées</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">∞</div>
+          <div class="label">Envie d'apprendre</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Skills ─── -->
+  <section id="skills">
+    <p class="section-label">Compétences</p>
+    <h2 class="section-title">Ce que je sais faire</h2>
+    <div class="skills-grid">
+
+      <div class="skill-category">
+        <h3>⚡ Frontend</h3>
+        <div class="skill-tags">
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>🛠 Backend</h3>
+        <div class="skill-tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">Express</span>
+          <span class="tag">Python</span>
+          <span class="tag">REST API</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>🗄 Base de données</h3>
+        <div class="skill-tags">
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">MongoDB</span>
+          <span class="tag">SQL</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>🔧 Outils & DevOps</h3>
+        <div class="skill-tags">
+          <span class="tag">Git</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Linux</span>
+          <span class="tag">CI/CD</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>🎨 Design</h3>
+        <div class="skill-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">UI/UX</span>
+          <span class="tag">Responsive Design</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>🧠 Soft Skills</h3>
+        <div class="skill-tags">
+          <span class="tag">Autonomie</span>
+          <span class="tag">Travail en équipe</span>
+          <span class="tag">Curiosité</span>
+          <span class="tag">Rigueur</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Projects ─── -->
+  <section id="projects">
+    <p class="section-label">Projets</p>
+    <h2 class="section-title">Ce que j'ai construit</h2>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-icon">🚀</div>
+        <h3>Projet 1</h3>
+        <p>Description courte du projet — ce qu'il fait, les technologies utilisées, et la valeur qu'il apporte.</p>
+        <div class="skill-tags">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+        </div>
+        <div class="project-links">
+          <a href="#" class="project-link">→ Demo</a>
+          <a href="#" class="project-link">GitHub</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">🛒</div>
+        <h3>Projet 2</h3>
+        <p>Description courte du projet — ce qu'il fait, les technologies utilisées, et la valeur qu'il apporte.</p>
+        <div class="skill-tags">
+          <span class="tag">Next.js</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+        <div class="project-links">
+          <a href="#" class="project-link">→ Demo</a>
+          <a href="#" class="project-link">GitHub</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-icon">📊</div>
+        <h3>Projet 3</h3>
+        <p>Description courte du projet — ce qu'il fait, les technologies utilisées, et la valeur qu'il apporte.</p>
+        <div class="skill-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Docker</span>
+        </div>
+        <div class="project-links">
+          <a href="#" class="project-link">→ Demo</a>
+          <a href="#" class="project-link">GitHub</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Contact ─── -->
+  <section id="contact">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">Travaillons ensemble</h2>
+    <div class="contact-inner">
+      <p>
+        Tu as un projet, une idée, ou tu veux simplement discuter ?
+        N'hésite pas à me contacter — je réponds sous 24h.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:ton@email.com" class="btn btn-primary">✉ Envoyer un email</a>
+        <a href="https://github.com/MaxS0u" target="_blank" class="btn btn-outline">GitHub</a>
+        <a href="https://linkedin.com/in/ton-profil" target="_blank" class="btn btn-outline">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Construit avec soin par Maxime — 2026</p>
+</footer>
+
+<!-- ─── Background Animation ─── -->
+<script>
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W, H, particles;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  // Grid of subtle dots that slowly drift + connect when close
+  class Particle {
+    constructor() { this.reset(true); }
+
+    reset(init = false) {
+      this.x  = Math.random() * W;
+      this.y  = init ? Math.random() * H : -10;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = Math.random() * 0.25 + 0.05;
+      this.r  = Math.random() * 1.2 + 0.4;
+      this.a  = Math.random() * 0.5 + 0.1;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.y > H + 10) this.reset();
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(124, 106, 247, ${this.a})`;
+      ctx.fill();
+    }
+  }
+
+  function initParticles() {
+    particles = Array.from({ length: 120 }, () => new Particle());
+  }
+
+  function drawConnections() {
+    const maxDist = 130;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.12;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(124, 106, 247, ${alpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) { p.update(); p.draw(); }
+    drawConnections();
+    requestAnimationFrame(loop);
+  }
+
+  resize();
+  initParticles();
+  loop();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+</script>
+
+</body>
+</html>
